@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Weather Forecast – Download for Android</title>
+<meta name="description" content="Weather Forecast – accurate, beautiful and fast weather app for Android. Download the free APK.">
+<style>
+:root{
+  --bg:#ffffff; --surface:#f4f6fa; --text:#1f2430; --muted:#5f6675; --line:#e6e9f0;
+  --primary:#0b6efd; --primary-d:#0a58ca; --green:#0f9d58; --star:#f5a623;
+  --radius:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.5;
+  padding-bottom:84px;-webkit-font-smoothing:antialiased;
+}
+/* every section: only 5px on left & right */
+.wrap{max-width:640px;margin:0 auto;padding-left:5px;padding-right:5px}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:600;font-size:17px}
+.brand .mini{width:28px;height:28px;border-radius:8px}
+.icon-btn{width:40px;height:40px;border-radius:50%;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--muted)}
+.icon-btn:active{background:var(--surface)}
+
+/* hero */
+.hero{padding-top:22px}
+.hero-row{display:flex;gap:16px;align-items:flex-start}
+.app-icon{width:92px;height:92px;border-radius:22px;flex:none;box-shadow:0 8px 22px rgba(11,110,253,.28)}
+.hero h1{font-size:25px;line-height:1.2;font-weight:700;letter-spacing:-.3px}
+.dev{color:var(--primary);font-weight:600;font-size:14px;margin-top:4px}
+.sub{color:var(--muted);font-size:13px;margin-top:2px}
+
+.stats{display:flex;margin-top:22px;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stat{flex:1;text-align:center;padding:0 4px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:0}
+.stat b{display:block;font-size:15px;font-weight:700}
+.stat span{font-size:12px;color:var(--muted)}
+.badge{display:inline-grid;place-items:center;width:20px;height:20px;border:1.5px solid var(--text);border-radius:4px;font-size:10px;font-weight:700;line-height:1}
+
+.cta{margin-top:18px;display:flex;gap:10px}
+.btn{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+  height:48px;border-radius:999px;font-weight:600;font-size:16px;border:0;cursor:pointer;
+  transition:transform .15s,background .2s;
+}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 18px rgba(11,110,253,.35)}
+.btn-primary:hover{background:var(--primary-d)}
+.btn-ghost{background:#fff;color:var(--primary);border:1.5px solid var(--line);flex:0 0 auto;padding:0 20px}
+.note{font-size:12px;color:var(--muted);margin-top:10px;display:flex;align-items:center;gap:6px}
+
+/* sections */
+section{padding-top:28px}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sec-head h2{font-size:19px;font-weight:700;letter-spacing:-.2px}
+
+/* screenshots */
+.shots{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:none}
+.shots::-webkit-scrollbar{display:none}
+.phone{
+  flex:none;width:168px;height:350px;border-radius:22px;scroll-snap-align:start;
+  border:1px solid var(--line);overflow:hidden;position:relative;color:#fff;padding:14px 12px;
+  box-shadow:0 6px 20px rgba(20,30,60,.10);display:flex;flex-direction:column;
+}
+.p1{background:linear-gradient(170deg,#3b8bff 0%,#0b6efd 45%,#5aa9ff 100%)}
+.p2{background:linear-gradient(170deg,#1f2a44 0%,#2d3f6b 100%)}
+.p3{background:linear-gradient(170deg,#ff9a3c 0%,#ff6a5c 100%)}
+.p-city{font-size:12px;opacity:.9;display:flex;align-items:center;gap:4px}
+.p-temp{font-size:50px;font-weight:300;line-height:1;margin-top:10px}
+.p-big{font-size:46px;margin-top:8px}
+.p-desc{font-size:12px;opacity:.9;margin-top:2px}
+.p-card{margin-top:auto;background:rgba(255,255,255,.18);border-radius:14px;padding:10px;font-size:11px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.p-card b{display:block;font-size:13px}
+.hour{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.12);border-radius:10px;padding:8px 10px;margin-top:7px;font-size:12px}
+.hour:first-of-type{margin-top:12px}
+
+/* about */
+.about p{color:var(--muted);font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--text);background:#fff}
+
+/* features */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.feat{background:var(--surface);border-radius:var(--radius);padding:16px 14px}
+.feat .ico{width:38px;height:38px;border-radius:12px;background:#fff;display:grid;place-items:center;font-size:20px;box-shadow:0 2px 8px rgba(20,30,60,.08)}
+.feat h3{font-size:15px;margin-top:10px}
+.feat p{font-size:13px;color:var(--muted);margin-top:2px}
+
+/* data safety */
+.safe{border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.safe p{font-size:14px;color:var(--muted);margin-bottom:12px}
+.safe ul{list-style:none;display:grid;gap:10px}
+.safe li{display:flex;gap:10px;font-size:14px;align-items:flex-start}
+.tick{flex:none;width:20px;height:20px;border-radius:50%;background:#e6f6ec;color:var(--green);display:grid;place-items:center;font-size:12px;font-weight:700}
+
+/* steps */
+.steps{counter-reset:s;display:grid;gap:10px}
+.step{display:flex;gap:12px;background:var(--surface);border-radius:var(--radius);padding:14px}
+.step::before{counter-increment:s;content:counter(s);flex:none;width:28px;height:28px;border-radius:50%;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+.step b{display:block;font-size:15px}
+.step span{font-size:13px;color:var(--muted)}
+
+/* info table */
+.info{border-top:1px solid var(--line)}
+.info div{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px}
+.info span{color:var(--muted)}
+.info b{font-weight:600;text-align:right}
+
+/* faq */
+details{border-bottom:1px solid var(--line);padding:14px 0}
+summary{font-weight:600;font-size:15px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:20px;line-height:1;color:var(--muted);transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{font-size:14px;color:var(--muted);margin-top:8px}
+
+footer{padding-top:34px;text-align:center;color:var(--muted);font-size:12px}
+footer p+p{margin-top:4px}
+
+/* sticky install bar */
+.bar{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.96);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);
+  padding:10px 0 calc(10px + env(safe-area-inset-bottom));
+  transform:translateY(110%);transition:transform .3s ease;
+}
+.bar.show{transform:none}
+.bar .wrap{display:flex;align-items:center;gap:10px}
+.bar img{width:40px;height:40px;border-radius:10px}
+.bar .t{flex:1;min-width:0}
+.bar .t b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .t span{font-size:12px;color:var(--muted)}
+.bar .btn{flex:none;height:42px;padding:0 24px;font-size:15px}
+
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(20px);background:#1f2430;color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;z-index:40;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%)}
+</style>
+</head>
+<body>
+
+<!-- Reusable app icon -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="appicon" viewBox="0 0 96 96">
+      <defs>
+        <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4aa3ff"/><stop offset="1" stop-color="#0b57e3"/></linearGradient>
+        <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dbe9ff"/></linearGradient>
+      </defs>
+      <rect width="96" height="96" rx="22" fill="url(#g1)"/>
+      <circle cx="60" cy="36" r="14" fill="#ffd54a"/>
+      <g stroke="#ffd54a" stroke-width="3" stroke-linecap="round">
+        <path d="M60 14v-4M60 62v-4M38 36h-4M86 36h-4M44 20l-3-3M79 55l-3-3M76 20l3-3"/>
+      </g>
+      <path d="M30 70a12 12 0 0 1 1.6-23.9A16 16 0 0 1 62 50a10.5 10.5 0 0 1 2 20.8H30z" fill="url(#g2)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <svg class="mini"><use href="#appicon"/></svg>
+      <span>Weather Forecast</span>
+    </div>
+    <button class="icon-btn" id="shareTop" aria-label="Share">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <div class="wrap hero">
+    <div class="hero-row">
+      <svg class="app-icon"><use href="#appicon"/></svg>
+      <div>
+        <h1>Weather Forecast</h1>
+        <div class="dev" id="devName">HC Care Technologies</div>
+        <div class="sub">Free • No ads • Android</div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b>Free</b><span>Price</span></div>
+      <div class="stat"><b id="verStat">1.0</b><span>Version</span></div>
+      <div class="stat"><b>APK</b><span>Direct file</span></div>
+      <div class="stat"><b><span class="badge" style="color:var(--text)">3+</span></b><span>Rated for 3+</span></div>
+    </div>
+
+    <div class="cta">
+      <a class="btn btn-primary" id="dl" href="#" download>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+        Download APK
+      </a>
+      <button class="btn btn-ghost" id="shareBtn">Share</button>
+    </div>
+    <div class="note">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6z"/></svg>
+      Safe direct download. Works on Android phones &amp; tablets.
+    </div>
+  </div>
+
+  <!-- SCREENSHOTS -->
+  <section class="wrap">
+    <div class="sec-head"><h2>App preview</h2></div>
+    <div class="shots">
+      <div class="phone p1">
+        <div class="p-city">📍 Your City</div>
+        <div class="p-big">⛅</div>
+        <div class="p-temp">28°</div>
+        <div class="p-desc">Partly Cloudy · Feels like 31°</div>
+        <div class="p-card">
+          <div><b>62%</b>Humidity</div><div><b>12 km/h</b>Wind</div>
+          <div><b>6</b>UV Index</div><div><b>1012 hPa</b>Pressure</div>
+        </div>
+      </div>
+      <div class="phone p2">
+        <div class="p-city">Hourly forecast</div>
+        <div class="hour"><span>Now</span><span>⛅</span><b>28°</b></div>
+        <div class="hour"><span>2 PM</span><span>☀️</span><b>30°</b></div>
+        <div class="hour"><span>3 PM</span><span>☀️</span><b>31°</b></div>
+        <div class="hour"><span>4 PM</span><span>⛅</span><b>29°</b></div>
+        <div class="hour"><span>5 PM</span><span>🌦️</span><b>27°</b></div>
+        <div class="hour"><span>6 PM</span><span>🌧️</span><b>25°</b></div>
+        <div class="hour"><span>7 PM</span><span>🌙</span><b>24°</b></div>
+      </div>
+      <div class="phone p3">
+        <div class="p-city">7-day forecast</div>
+        <div class="hour"><span>Mon</span><span>☀️</span><b>32° / 24°</b></div>
+        <div class="hour"><span>Tue</span><span>⛅</span><b>30° / 23°</b></div>
+        <div class="hour"><span>Wed</span><span>🌧️</span><b>27° / 22°</b></div>
+        <div class="hour"><span>Thu</span><span>⛈️</span><b>26° / 22°</b></div>
+        <div class="hour"><span>Fri</span><span>🌦️</span><b>28° / 23°</b></div>
+        <div class="hour"><span>Sat</span><span>☀️</span><b>31° / 24°</b></div>
+        <div class="hour"><span>Sun</span><span>☀️</span><b>33° / 25°</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="wrap about">
+    <div class="sec-head"><h2>About this app</h2></div>
+    <p>Weather Forecast gives you a clean, fast and accurate look at the weather. Check current conditions, hourly updates and the week ahead in one simple screen, so you can plan your day with confidence.</p>
+    <div class="chips">
+      <span class="chip">Weather</span><span class="chip">Lightweight</span><span class="chip">Clean design</span><span class="chip">Free</span>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="wrap">
+    <div class="sec-head"><h2>Key features</h2></div>
+    <div class="grid">
+      <div class="feat"><div class="ico">🌡️</div><h3>Live conditions</h3><p>Temperature, humidity, wind and more.</p></div>
+      <div class="feat"><div class="ico">⏱️</div><h3>Hourly forecast</h3><p>Know what's coming hour by hour.</p></div>
+      <div class="feat"><div class="ico">📅</div><h3>7-day outlook</h3><p>Plan your week ahead easily.</p></div>
+      <div class="feat"><div class="ico">⚡</div><h3>Fast &amp; light</h3><p>Small download, smooth experience.</p></div>
+    </div>
+  </section>
+
+  <!-- DATA SAFETY -->
+  <section class="wrap">
+    <div class="sec-head"><h2>Safety</h2></div>
+    <div class="safe">
+      <p>We care about your privacy. Here is a quick summary.</p>
+      <ul>
+        <li><span class="tick">✓</span><span>No ads and no in-app purchases</span></li>
+        <li><span class="tick">✓</span><span>Simple and clean experience</span></li>
+        <li><span class="tick">✓</span><span>Free to download and use</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- INSTALL STEPS -->
+  <section class="wrap">
+    <div class="sec-head"><h2>How to install</h2></div>
+    <div class="steps">
+      <div class="step"><div><b>Download the APK</b><span>Tap the Download APK button above.</span></div></div>
+      <div class="step"><div><b>Open the file</b><span>Open it from your notifications or Downloads folder.</span></div></div>
+      <div class="step"><div><b>Allow installation</b><span>If asked, enable “Install unknown apps” for your browser.</span></div></div>
+      <div class="step"><div><b>Install &amp; enjoy</b><span>Tap Install, then open the app.</span></div></div>
+    </div>
+  </section>
+
+  <!-- APP INFO -->
+  <section class="wrap">
+    <div class="sec-head"><h2>App info</h2></div>
+    <div class="info">
+      <div><span>Version</span><b id="verInfo">1.0</b></div>
+      <div><span>Requires</span><b>Android 5.0 and up</b></div>
+      <div><span>Offered by</span><b id="devInfo">HC Care Technologies</b></div>
+      <div><span>File type</span><b>APK</b></div>
+      <div><span>Price</span><b>Free</b></div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="wrap">
+    <div class="sec-head"><h2>FAQ</h2></div>
+    <details><summary>Is this app free?</summary><p>Yes. The app is completely free to download and use.</p></details>
+    <details><summary>Why does Android show a warning?</summary><p>Apps installed outside the Play Store show a standard warning. Allow “Install unknown apps” for your browser and continue.</p></details>
+    <details><summary>Which devices are supported?</summary><p>Most Android phones and tablets running Android 5.0 or newer.</p></details>
+    <details><summary>How do I update the app?</summary><p>Visit this page again and download the latest APK. Install it over the old version.</p></details>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p>© <span id="yr"></span> HC Care Technologies. All rights reserved.</p>
+  <p>Android is a trademark of Google LLC.</p>
+</footer>
+
+<!-- Sticky install bar -->
+<div class="bar" id="bar">
+  <div class="wrap">
+    <svg width="40" height="40" style="border-radius:10px"><use href="#appicon"/></svg>
+    <div class="t"><b>Weather Forecast</b><span>Free • Android</span></div>
+    <a class="btn btn-primary" id="dl2" href="#" download>Install</a>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== EDIT THESE ===== */
+const CONFIG = {
+  apkUrl: "https://github.com/trainingcenter12/highway-flyer/raw/main/weather_forcast.apk",
+  developer: "HC Care Technologies",
+  version: "1.0"
+};
+/* ====================== */
+
+const $ = id => document.getElementById(id);
+$("dl").href = CONFIG.apkUrl;
+$("dl2").href = CONFIG.apkUrl;
+$("devName").textContent = CONFIG.developer;
+$("devInfo").textContent = CONFIG.developer;
+$("verStat").textContent = CONFIG.version;
+$("verInfo").textContent = CONFIG.version;
+$("yr").textContent = new Date().getFullYear();
+
+function toast(msg){
+  const t = $("toast"); t.textContent = msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 2000);
+}
+async function share(){
+  const data = {title:"Weather Forecast", text:"Download the Weather Forecast app for Android", url:location.href};
+  try{
+    if(navigator.share){ await navigator.share(data); }
+    else{ await navigator.clipboard.writeText(location.href); toast("Link copied"); }
+  }catch(e){}
+}
+$("shareBtn").addEventListener("click", share);
+$("shareTop").addEventListener("click", share);
+
+[$("dl"), $("dl2")].forEach(a => a.addEventListener("click", () => toast("Download started")));
+
+/* show sticky bar when main button leaves screen */
+const bar = $("bar");
+new IntersectionObserver(([e]) => {
+  bar.classList.toggle("show", !e.isIntersecting && e.boundingClientRect.top < 0);
+}, {threshold:0}).observe($("dl"));
+</script>
+</body>
+</html>
